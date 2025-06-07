@@ -1,0 +1,10 @@
+venv/
+*.pkl
+*.pt
+*.dll
+*.lib
+*.bin
+*.zip
+__pycache__/
+.DS_Store
+*.log
