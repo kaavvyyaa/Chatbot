@@ -17,24 +17,16 @@ def load_documents(doc_paths):
     return documents
 
 # Create or load a FAISS vectorstore
-def get_vectorstore(documents, index_path="index/faiss_index.pkl"):
-    if os.path.exists(index_path):
-        with open(index_path, "rb") as f:
-            vectorstore = pickle.load(f)
-    else:
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-        chunks = text_splitter.split_documents(documents)
-        
-        embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
-            model_kwargs={"device": "cpu"}
-        )
+def get_vectorstore(documents):
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    chunks = text_splitter.split_documents(documents)
 
-        vectorstore = FAISS.from_documents(chunks, embedding=embeddings)
-        
-        # Save index
-        with open(index_path, "wb") as f:
-            pickle.dump(vectorstore, f)
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_kwargs={"device": "cpu"}
+    )
+
+    vectorstore = FAISS.from_documents(chunks, embedding=embeddings)
 
     return vectorstore
 
